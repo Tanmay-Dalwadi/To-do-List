@@ -8,8 +8,6 @@
   <link rel="stylesheet" href="style.css" />
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"/>
-
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
   <div class="container">
@@ -24,10 +22,7 @@
         <option value="high">High</option>
       </select>
 
-      <div id="dueDateContainer">
-        <i id="dueDateTrigger" class="fa fa-calendar" style="cursor: pointer;"></i>
-        <input type="hidden" id="dueDate" name="dueDate">
-      </div>
+      <input type="text" id="dueDate" placeholder="Due date (DD/MM/YYYY)" />
 
       <button onclick="addTask()">Add Task</button>
     </div>
@@ -44,16 +39,8 @@
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      flatpickr("#dueDateTrigger", {
-        dateFormat: "d/m/Y",
-        altInput: false,
-        clickOpens: true,
-        appendTo: document.getElementById('dueDateContainer'),
-        onChange: function(selectedDates, dateStr, instance) {
-          document.getElementById('dueDate').value = dateStr;
-        }
-      });
+    flatpickr("#dueDate", {
+      dateFormat: "d/m/Y"
     });
   </script>
 </body>
