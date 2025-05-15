@@ -155,6 +155,10 @@ function checkDueDates() {
         }
     });
 }
+flatpickr("#dueDate", {
+  dateFormat: "d/m/Y",
+  disableMobile: true // Add this line
+});
 
 setInterval(checkDueDates, 3600000);
 
