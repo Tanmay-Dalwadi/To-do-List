@@ -65,7 +65,7 @@ function addTask() {
     const dueDate = dueDateInput.value;
 
     if (taskText !== '') {
-        tasks.push({ text: taskText, completed: false, priority: priority, dueDate: dueDate });
+        tasks.push({ text: taskText, completed: false, priority: priority, dueDate: dueDate, notified: false }); // Initialize 'notified' to false
         newTaskInput.value = '';
         prioritySelect.value = 'low';
         dueDateInput.value = '';
@@ -75,6 +75,8 @@ function addTask() {
 
 function toggleComplete(index) {
     tasks[index].completed = !tasks[index].completed;
+    tasks[index].notified = false; // Reset notification status on completion change
+    saveTasks();
 }
 
 function removeTask(index) {
@@ -101,6 +103,13 @@ function editTask(index) {
             <button class="cancel" onclick="cancelEdit(${index}, '${task.text}')">Cancel</button>
         </div>
     `;
+
+    const editInput = listItem.querySelector('.edit-input');
+    editInput.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            saveEdit(index);
+        }
+    });
 }
 
 function saveEdit(index) {
@@ -111,11 +120,24 @@ function saveEdit(index) {
     tasks[index].text = editInput.value.trim();
     tasks[index].priority = editPrioritySelect.value;
     tasks[index].dueDate = editDueDateInput.value;
+    tasks[index].notified = false; // Reset notification status on edit
     renderTasks();
 }
 
 function cancelEdit(index, originalText) {
-    renderTasks();
+    const listItem = taskList.children[index];
+    const taskItemContent = listItem.querySelector('.task-item-content');
+    const task = tasks[index];
+
+    taskItemContent.innerHTML = `
+        <input type="checkbox" ${task.completed ? 'checked' : ''} onchange="toggleComplete(${index})">
+        <span class="${task.completed ? 'completed' : ''}" id="taskText-${index}">${originalText}</span>
+        ${task.dueDate ? `<span class="due-date">Due: ${task.dueDate}</span>` : ''}
+    `;
+    listItem.querySelector('.actions').innerHTML = `
+        <button onclick="editTask(${index})">Change</button>
+        <button class="remove" onclick="removeTask(${index})">Remove</button>
+    `;
 }
 
 function deleteAllCompletedTasks() {
@@ -124,40 +146,47 @@ function deleteAllCompletedTasks() {
 }
 
 function checkDueDates() {
+    const now = new Date();
     tasks.forEach(task => {
-        if (task.dueDate && !task.completed) {
-            const now = new Date();
+        if (task.dueDate && !task.completed && !task.notified) {
             const dueDate = new Date(task.dueDate);
             const timeDiff = dueDate.getTime() - now.getTime();
             const daysLeft = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
+            let notificationMessage = null;
+
             if (daysLeft <= 0) {
-                if (Notification.permission === 'granted') {
-                    new Notification(`To-Do Reminder: "${task.text}" is overdue!`);
-                } else if (Notification.permission !== 'denied') {
-                    Notification.requestPermission().then(permission => {
-                        if (permission === 'granted') {
-                            new Notification(`To-Do Reminder: "${task.text}" is overdue!`);
-                        }
-                    });
-                }
+                notificationMessage = `To-Do Reminder: "${task.text}" is overdue!`;
             } else if (daysLeft <= 1) {
+                notificationMessage = `To-Do Reminder: "${task.text}" is due tomorrow!`;
+            } else if (daysLeft === 0) { // Added check for tasks due today
+                notificationMessage = `To-Do Reminder: "${task.text}" is due today!`;
+            }
+
+            if (notificationMessage) {
                 if (Notification.permission === 'granted') {
-                    new Notification(`To-Do Reminder: "${task.text}" is due tomorrow!`);
+                    new Notification(notificationMessage);
+                    task.notified = true; // Mark as notified
+                    saveTasks(); // Update local storage
                 } else if (Notification.permission !== 'denied') {
                     Notification.requestPermission().then(permission => {
                         if (permission === 'granted') {
-                            new Notification(`To-Do Reminder: "${task.text}" is due tomorrow!`);
+                            new Notification(notificationMessage);
+                            task.notified = true;
+                            saveTasks();
                         }
                     });
                 }
             }
+        } else if (task.completed || (task.dueDate && new Date(task.dueDate) > now)) {
+            task.notified = false; // Reset notification status if completed or due date is in the future
+            saveTasks();
         }
     });
 }
 flatpickr("#dueDate", {
-  dateFormat: "d/m/Y",
-  disableMobile: true // Add this line
+    dateFormat: "d/m/Y",
+    disableMobile: true
 });
 
 setInterval(checkDueDates, 3600000);
