@@ -1,3 +1,5 @@
+/* style.css */
+
 /* Author: Tanmay-Dalwadi */
 body {
     font-family: sans-serif;
@@ -28,8 +30,6 @@ body {
     max-width: 90%;
     margin: 40px auto;
 }
-
-/* In your style.css or within <style> tags in <head> */
 
 h1 {
     text-align: center;
@@ -67,10 +67,18 @@ h1 {
     border-radius: 0 4px 4px 0;
     cursor: pointer;
     font-size: 16px;
+    transition: background-color 0.3s ease;
 }
 
 .input-group button:hover {
     background-color: #4cae4c;
+}
+
+.input-group input:focus,
+.input-group select:focus,
+.input-group button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #007bff; /* Added focus style */
 }
 
 #deleteAllCompleted {
@@ -125,6 +133,7 @@ li:last-child {
     flex-grow: 1;
     font-size: 16px;
     word-break: break-word;
+    margin-left: 5px; /* Added spacing for priority border */
 }
 
 .task-item-content span.completed {
@@ -173,15 +182,23 @@ li:last-child {
     cursor: pointer;
     font-size: 14px;
     margin-left: 5px;
+    transition: background-color 0.3s ease; /* Added transition */
 }
 
 .actions button.remove {
     background-color: #d9534f;
+    transition: background-color 0.3s ease; /* Added transition */
 }
 
 .actions button:hover,
 .edit-actions button.cancel:hover {
     opacity: 0.9;
+}
+
+.actions button:focus,
+.edit-actions button.cancel:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #007bff; /* Added focus style */
 }
 
 .edit-input {
@@ -219,6 +236,11 @@ li:last-child {
 .edit-actions button.save:active {
     transform: translateY(0);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.edit-actions button.save:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #007bff; /* Added focus style */
 }
 
 /* Media Queries for Responsiveness */
