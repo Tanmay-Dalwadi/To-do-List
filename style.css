@@ -30,12 +30,7 @@ body {
 }
 
 /* In your style.css or within <style> tags in <head> */
-#dueDateTrigger img {
-  width: 30px; /* Adjust this value as needed */
-  height: 30px; /* Adjust this value as needed */
-  cursor: pointer; /* Keep the pointer cursor */
-  vertical-align: middle; /* Adjust vertical alignment if needed */
-}
+
 h1 {
     text-align: center;
     color: #333;
