@@ -8,7 +8,56 @@
 
   <!-- Flatpickr CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"/>
+</head><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>To-Do App</title>
+
+  <!-- Custom CSS (your own styles) -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Flatpickr CSS (CDN) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"/>
 </head>
+<body>
+  <div class="container">
+    <h1>To-Do List</h1>
+    <div class="input-group">
+      <input type="text" id="newTask" placeholder="Task name" />
+
+      <select id="priority">
+        <option value="" disabled selected>Select priority</option>
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+      </select>
+
+      <!-- Use type="text" for Flatpickr -->
+      <input type="text" id="dueDate" placeholder="Due date (DD/MM/YYYY)" />
+
+      <button onclick="addTask()">Add Task</button>
+    </div>
+
+    <button id="deleteAllCompleted" onclick="deleteAllCompletedTasks()">Delete All Completed</button>
+    <ul id="taskList"></ul>
+  </div>
+
+  <!-- Your script.js file -->
+  <script src="script.js"></script>
+
+  <!-- Flatpickr JS (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+  <!-- Initialize Flatpickr -->
+  <script>
+    flatpickr("#dueDate", {
+      dateFormat: "d/m/Y"
+    });
+  </script>
+</body>
+</html>
 <body>
   <div class="container">
     <h1>To-Do List</h1>
